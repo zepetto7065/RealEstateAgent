@@ -10,7 +10,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "AUTHORITY")
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

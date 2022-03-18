@@ -1,12 +1,12 @@
 package me.sangmoon.RealEstateAgent.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
+import me.sangmoon.RealEstateAgent.domain.room.Room;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,8 +14,6 @@ import java.util.Set;
 @Table(name = "USER")
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class User {
 
     @Id
@@ -30,7 +28,21 @@ public class User {
     private String nickname;
 
     private boolean activated;
-    
+
+    @OneToMany(mappedBy = "user")
+    private List<Room> rooms = new ArrayList<>();
+
+    @Builder
+    public User(Long userId, String username, String password, String nickname, boolean activated, Set<Authority> authorities, List<Room> rooms) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.activated = activated;
+        this.authorities = authorities;
+        this.rooms = rooms;
+    }
+
     @ManyToMany
     @JoinTable(
             name = "user_authority",

@@ -1,6 +1,7 @@
 package me.sangmoon.RealEstateAgent.service;
 
 import lombok.RequiredArgsConstructor;
+import me.sangmoon.RealEstateAgent.Exception.MemberRuntimeException;
 import me.sangmoon.RealEstateAgent.domain.Authority;
 import me.sangmoon.RealEstateAgent.domain.User;
 import me.sangmoon.RealEstateAgent.dto.UserDto;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class UserService {
     @Transactional
     public User signup(UserDto userDto) {
         if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new MemberRuntimeException("이미 가입되어 있는 유저입니다.");
         }
         Authority authority = Authority.builder()
                 .authorityName("ROLE_USER")
@@ -36,4 +38,15 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    @Transactional(readOnly = true)
+    public Optional<User> getUserWithAuthorities(String username) {
+        return userRepository.findOneWithAuthoritiesByUsername(username);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> getUserById(Long userId){
+        return userRepository.findById(userId);
+    }
+
 }
