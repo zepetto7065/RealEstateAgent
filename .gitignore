@@ -1,0 +1,12 @@
+.idea
+target
+HELP.md
+mvnw.cmd
+mvnw
+gradle
+gradlew
+gradlew.bat
+settings.gradle
+HELP.md
+.gradle
+.DS_Store
