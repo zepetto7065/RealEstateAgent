@@ -1,11 +1,11 @@
 package me.sangmoon.RealEstateAgent.domain.room;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import me.sangmoon.RealEstateAgent.domain.User;
-import me.sangmoon.RealEstateAgent.dto.RoomDto;
-
 import javax.persistence.*;
-import java.util.Optional;
 
 @Entity
 @DiscriminatorColumn(name = "PAY_TYPE", discriminatorType = DiscriminatorType.STRING)

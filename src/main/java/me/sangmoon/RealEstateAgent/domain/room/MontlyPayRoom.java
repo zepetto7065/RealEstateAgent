@@ -1,16 +1,13 @@
 package me.sangmoon.RealEstateAgent.domain.room;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.sangmoon.RealEstateAgent.domain.User;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@Getter
+@Getter @Setter
 @DiscriminatorValue("M")
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class MontlyPayRoom extends Room {
