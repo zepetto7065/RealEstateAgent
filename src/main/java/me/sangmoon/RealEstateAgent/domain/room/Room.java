@@ -3,8 +3,8 @@ package me.sangmoon.RealEstateAgent.domain.room;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import me.sangmoon.RealEstateAgent.domain.User;
+
 import javax.persistence.*;
 
 @Entity
@@ -26,7 +26,12 @@ public abstract class Room {
     private String address;
 
     @Enumerated(EnumType.STRING)
+    @Column(name="ROOM_TYPE")
     private RoomType roomType; //주문 상태
+
+    @Column(name="PAY_TYPE", insertable = false, updatable = false)
+    private String payType;
+
 
     public Room(Long id, User user,String address, RoomType roomType) {
         this.id = id;

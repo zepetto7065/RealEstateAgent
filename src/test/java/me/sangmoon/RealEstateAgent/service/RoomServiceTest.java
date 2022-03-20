@@ -4,16 +4,14 @@ import me.sangmoon.RealEstateAgent.domain.User;
 import me.sangmoon.RealEstateAgent.domain.room.MontlyPayRoom;
 import me.sangmoon.RealEstateAgent.domain.room.Room;
 import me.sangmoon.RealEstateAgent.domain.room.RoomType;
-import me.sangmoon.RealEstateAgent.domain.room.YearlyPayRoom;
 import me.sangmoon.RealEstateAgent.dto.RoomDto;
-import org.assertj.core.api.Assertions;
+import me.sangmoon.RealEstateAgent.dto.SearchDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,16 +43,64 @@ class RoomServiceTest {
     @Test
     void 전체조회() {
         //given
-        RoomDto roomDto = new RoomDto(1L, "M", RoomType.ALL, "서울시 강서구 방화동", 200000000L, 1000000L);
-        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000L,0L);
+        RoomDto roomDto = new RoomDto(1L, "M", RoomType.TWOROOM, "서울시 강서구 방화동", 200000000L, 1000000L);
+        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000L, 0L);
         RoomDto roomDto3 = new RoomDto(3L, "M", RoomType.THREEROOM, "제주도 제주시 제주동", 100000000L, 1000000L);
+        //검색조건
+        SearchDto searchDto = SearchDto.forJunitTest()
+                .roomType(RoomType.TWOROOM)
+                .payType(null)
+                .build();
+
         //when
         roomService.insertMyRoom(roomDto, 1L);
         roomService.insertMyRoom(roomDto2, 1L);
         roomService.insertMyRoom(roomDto3, 1L);
-        List<Room> rooms = roomService.selectRoomList();
+        List<Room> rooms = roomService.selectRoomList(searchDto);
         //then
         assertThat(rooms.size()).isEqualTo(3);
+        assertThat(rooms.get(0).getAddress()).isEqualTo("서울시 강서구 방화동");
+        assertThat(((MontlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(1000000L);
+    }
+
+    @Test
+    void 거래유형_조회(){
+        //given
+        RoomDto roomDto = new RoomDto(1L, "M", RoomType.TWOROOM, "서울시 강서구 방화동", 200000000L, 1000000L);
+        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000L, 0L);
+        //검색조건
+        SearchDto searchDto = SearchDto.forJunitTest()
+                .roomType(RoomType.ALL)
+                .payType("Y")
+                .build();
+
+        //when
+        roomService.insertMyRoom(roomDto, 1L);
+        roomService.insertMyRoom(roomDto2, 1L);
+        List<Room> rooms = roomService.selectRoomList(searchDto);
+        //then
+        assertThat(rooms.size()).isEqualTo(1);
+        assertThat(rooms.get(0).getAddress()).isEqualTo("서울시 강서구 방화동");
+        assertThat(((MontlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(1000000L);
+    }
+
+    @Test
+    void 가격범위_조회(){
+        //given
+        RoomDto roomDto = new RoomDto(1L, "M", RoomType.TWOROOM, "서울시 강서구 방화동", 200000000, 1000000);
+        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000, 0);
+        //검색조건
+        SearchDto searchDto = SearchDto.forJunitTest()
+                .roomType(RoomType.ALL)
+                .minPrice(300000000)
+                .build();
+
+        //when
+        roomService.insertMyRoom(roomDto, 1L);
+        roomService.insertMyRoom(roomDto2, 1L);
+        List<Room> rooms = roomService.selectRoomList(searchDto);
+        //then
+        assertThat(rooms.size()).isEqualTo(1);
         assertThat(rooms.get(0).getAddress()).isEqualTo("서울시 강서구 방화동");
         assertThat(((MontlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(1000000L);
     }
@@ -115,7 +161,7 @@ class RoomServiceTest {
     }
 
     @Test
-    void 내방_삭제(){
+    void 내방_삭제() {
         //given
         RoomDto roomDto = RoomDto.builder()
                 .id(1L)
@@ -131,4 +177,5 @@ class RoomServiceTest {
         //then
         assertThat(rooms.size()).isEqualTo(0);
     }
+
 }

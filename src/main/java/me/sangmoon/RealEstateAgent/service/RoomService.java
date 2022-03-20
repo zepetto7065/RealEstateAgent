@@ -3,11 +3,13 @@ package me.sangmoon.RealEstateAgent.service;
 import lombok.RequiredArgsConstructor;
 import me.sangmoon.RealEstateAgent.Exception.MemberRuntimeException;
 import me.sangmoon.RealEstateAgent.Exception.RoomRuntimeException;
+import me.sangmoon.RealEstateAgent.repository.RoomSearchRepository;
 import me.sangmoon.RealEstateAgent.domain.User;
 import me.sangmoon.RealEstateAgent.domain.room.MontlyPayRoom;
 import me.sangmoon.RealEstateAgent.domain.room.Room;
 import me.sangmoon.RealEstateAgent.domain.room.YearlyPayRoom;
 import me.sangmoon.RealEstateAgent.dto.RoomDto;
+import me.sangmoon.RealEstateAgent.dto.SearchDto;
 import me.sangmoon.RealEstateAgent.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +22,11 @@ import java.util.List;
 public class RoomService {
 
     private final RoomRepository roomRepository;
+    private final RoomSearchRepository roomSearchRepository;
     private final UserService userService;
 
-    public List<Room> selectRoomList() {
-        return roomRepository.findAll();
+    public List<Room> selectRoomList(SearchDto searchDto) {
+        return roomSearchRepository.findAllBySearch(searchDto);
     }
 
     public List<Room> selectMyRoomList(Long userId) {
@@ -48,8 +51,8 @@ public class RoomService {
             room = YearlyPayRoom.builder()
                     .user(user)
                     .roomType(roomDto.getRoomType())
-                    .address(roomDto.getAddress())
                     .deposit(roomDto.getDeposit())
+                    .address(roomDto.getAddress())
                     .build();
         }
         roomRepository.save(room);
