@@ -4,6 +4,7 @@ import me.sangmoon.RealEstateAgent.domain.User;
 import me.sangmoon.RealEstateAgent.domain.room.MontlyPayRoom;
 import me.sangmoon.RealEstateAgent.domain.room.Room;
 import me.sangmoon.RealEstateAgent.domain.room.RoomType;
+import me.sangmoon.RealEstateAgent.domain.room.YearlyPayRoom;
 import me.sangmoon.RealEstateAgent.dto.RoomDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,10 +44,19 @@ class RoomServiceTest {
 
     @Test
     void 전체조회() {
+        //given
+        RoomDto roomDto = new RoomDto(1L, "M", RoomType.ALL, "서울시 강서구 방화동", 200000000L, 1000000L);
+        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000L,0L);
+        RoomDto roomDto3 = new RoomDto(3L, "M", RoomType.THREEROOM, "제주도 제주시 제주동", 100000000L, 1000000L);
         //when
-        roomService.selectRoomList();
+        roomService.insertMyRoom(roomDto, 1L);
+        roomService.insertMyRoom(roomDto2, 1L);
+        roomService.insertMyRoom(roomDto3, 1L);
+        List<Room> rooms = roomService.selectRoomList();
         //then
-
+        assertThat(rooms.size()).isEqualTo(3);
+        assertThat(rooms.get(0).getAddress()).isEqualTo("서울시 강서구 방화동");
+        assertThat(((MontlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(1000000L);
     }
 
     @Test
