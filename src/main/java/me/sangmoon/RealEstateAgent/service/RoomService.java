@@ -5,7 +5,7 @@ import me.sangmoon.RealEstateAgent.Exception.MemberRuntimeException;
 import me.sangmoon.RealEstateAgent.Exception.RoomRuntimeException;
 import me.sangmoon.RealEstateAgent.repository.RoomSearchRepository;
 import me.sangmoon.RealEstateAgent.domain.User;
-import me.sangmoon.RealEstateAgent.domain.room.MontlyPayRoom;
+import me.sangmoon.RealEstateAgent.domain.room.MonthlyPayRoom;
 import me.sangmoon.RealEstateAgent.domain.room.Room;
 import me.sangmoon.RealEstateAgent.domain.room.YearlyPayRoom;
 import me.sangmoon.RealEstateAgent.dto.RoomDto;
@@ -33,14 +33,14 @@ public class RoomService {
         return roomRepository.findAllById(userId);
     }
 
-    public void insertMyRoom(RoomDto roomDto, Long userId) {
+    public void insertMyRoom(RoomDto roomDto) {
 
-        User user = userService.getUserById(userId)
+        User user = userService.getUserById(roomDto.getUserId())
                 .orElseThrow(() -> new MemberRuntimeException("해당 ID에 맞는 user가 존재하지 않습니다."));
 
         Room room;
         if ("M".equals(roomDto.getPayType())) {
-            room = MontlyPayRoom.builder()
+            room = MonthlyPayRoom.builder()
                     .user(user)
                     .roomType(roomDto.getRoomType())
                     .address(roomDto.getAddress())
@@ -58,14 +58,14 @@ public class RoomService {
         roomRepository.save(room);
     }
 
-    public void updateMyRoom(RoomDto roomDto, Long userId) {
+    public void updateMyRoom(RoomDto roomDto) {
         if ("M".equals(roomDto.getPayType())) {
-            MontlyPayRoom montlyPayRoomById = (MontlyPayRoom) roomRepository.findById(userId)
+            MonthlyPayRoom monthlyPayRoomById = (MonthlyPayRoom) roomRepository.findById(roomDto.getRoomId())
                     .orElseThrow(() -> new RoomRuntimeException("해당 ID에 맞는 내 방이 존재하지 않습니다."));
-            montlyPayRoomById.setDeposit(roomDto.getDeposit());
-            montlyPayRoomById.setRentPrice(roomDto.getRentPrice());
+            monthlyPayRoomById.setDeposit(roomDto.getDeposit());
+            monthlyPayRoomById.setRentPrice(roomDto.getRentPrice());
         }else{
-            YearlyPayRoom yearlyPayRoom = (YearlyPayRoom) roomRepository.findById(userId)
+            YearlyPayRoom yearlyPayRoom = (YearlyPayRoom) roomRepository.findById(roomDto.getRoomId())
                     .orElseThrow(() -> new RoomRuntimeException("해당 ID에 맞는 내 방이 존재하지 않습니다."));
             yearlyPayRoom.setDeposit(roomDto.getDeposit());
         }

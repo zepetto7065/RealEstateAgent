@@ -10,14 +10,12 @@ import javax.persistence.Entity;
 @Getter @Setter
 @DiscriminatorValue("M")
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-public class MontlyPayRoom extends Room {
+public class MonthlyPayRoom extends Room {
     private long rentPrice;
-    private long deposit;
 
     @Builder
-    public MontlyPayRoom(Long id, User user,String address, RoomType roomType, long rentPrice, long deposit) {
-        super(id, user,address, roomType);
+    public MonthlyPayRoom(Long id, User user, String address, RoomType roomType, long deposit, long rentPrice) {
+        super(id, user,address, roomType,deposit);
         this.rentPrice = rentPrice;
-        this.deposit = deposit;
     }
 }

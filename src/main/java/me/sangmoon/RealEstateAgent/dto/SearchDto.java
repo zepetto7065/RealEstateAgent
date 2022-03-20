@@ -9,14 +9,14 @@ public class SearchDto {
 
     private RoomType roomType;
     private String payType;
-    private long minPrice;
-    private long maxPrice;
+    private Long minDeposit;
+    private Long maxDeposit;
 
     @Builder(builderMethodName = "forJunitTest")
-    public SearchDto(RoomType roomType, String payType, long minPrice, long maxPrice) {
+    public SearchDto(RoomType roomType, String payType, long minDeposit, long maxDeposit) {
         this.roomType = roomType;
         this.payType = payType;
-        this.minPrice = minPrice;
-        this.maxPrice = maxPrice;
+        this.minDeposit = minDeposit;
+        this.maxDeposit = maxDeposit;
     }
 }

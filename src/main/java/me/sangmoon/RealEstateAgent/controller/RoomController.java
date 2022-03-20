@@ -35,24 +35,21 @@ public class RoomController {
     }
 
     @PostMapping("/room/new")
-    public ResponseEntity<Message> createRoom(
-            @ModelAttribute("roomDto") RoomDto roomDto,
-            @RequestParam("userId") Long userId){
-        roomService.insertMyRoom(roomDto, userId);
+    public ResponseEntity<Message> createRoom(@RequestBody RoomDto roomDto){
+        roomService.insertMyRoom(roomDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/room/update")
     public ResponseEntity<Message> updateRoom(
-            @ModelAttribute("roomDto") RoomDto roomDto,
-            @RequestParam("userId") Long userId){
-        roomService.updateMyRoom(roomDto, userId);
+            @RequestBody RoomDto roomDto){
+        roomService.updateMyRoom(roomDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/room/delete")
+    @GetMapping("/room/delete/{roomId}")
     public ResponseEntity<Message> deleteRoom(
-            @RequestParam("roomId") Long roomId){
+            @PathVariable("roomId") Long roomId){
         roomService.deleteMyRoomById(roomId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

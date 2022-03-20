@@ -19,7 +19,7 @@ public class RoomSearchRepository {
     private final EntityManager em;
 
     public List<Room> findAllBySearch(SearchDto searchDto) {
-        String jpql = "select r from Room r join MontlyPayRoom m";
+        String jpql = "select r from Room r";
         boolean isFirstCondition = true;
 
         //방유형
@@ -45,7 +45,7 @@ public class RoomSearchRepository {
         }
 
         //가격범위
-        if (searchDto.getMaxPrice() > 0) {
+        if (searchDto.getMaxDeposit() > 0) {
             if (isFirstCondition) {
                 jpql += " where";
                 isFirstCondition = false;
@@ -55,7 +55,7 @@ public class RoomSearchRepository {
             jpql += " r.deposit <= :maxPrice";
         }
 
-        if (searchDto.getMinPrice() > 0) {
+        if (searchDto.getMinDeposit() > 0) {
             if (isFirstCondition) {
                 jpql += " where";
                 isFirstCondition = false;
@@ -71,8 +71,8 @@ public class RoomSearchRepository {
         if (searchDto.getRoomType() != null && !RoomType.ALL.equals(searchDto.getRoomType()))
             query.setParameter("roomType", searchDto.getRoomType());
         if (searchDto.getPayType() != null) query.setParameter("payType", searchDto.getPayType());
-        if (searchDto.getMaxPrice() > 0) query.setParameter("maxPrice", searchDto.getMaxPrice());
-        if (searchDto.getMinPrice() > 0) query.setParameter("minPrice", searchDto.getMinPrice());
+        if (searchDto.getMaxDeposit() > 0) query.setParameter("maxPrice", searchDto.getMaxDeposit());
+        if (searchDto.getMinDeposit() > 0) query.setParameter("minPrice", searchDto.getMinDeposit());
 
         return query.getResultList();
 

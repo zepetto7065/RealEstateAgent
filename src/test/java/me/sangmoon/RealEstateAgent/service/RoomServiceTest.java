@@ -1,7 +1,7 @@
 package me.sangmoon.RealEstateAgent.service;
 
 import me.sangmoon.RealEstateAgent.domain.User;
-import me.sangmoon.RealEstateAgent.domain.room.MontlyPayRoom;
+import me.sangmoon.RealEstateAgent.domain.room.MonthlyPayRoom;
 import me.sangmoon.RealEstateAgent.domain.room.Room;
 import me.sangmoon.RealEstateAgent.domain.room.RoomType;
 import me.sangmoon.RealEstateAgent.dto.RoomDto;
@@ -43,9 +43,9 @@ class RoomServiceTest {
     @Test
     void 전체조회() {
         //given
-        RoomDto roomDto = new RoomDto(1L, "M", RoomType.TWOROOM, "서울시 강서구 방화동", 200000000L, 1000000L);
-        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000L, 0L);
-        RoomDto roomDto3 = new RoomDto(3L, "M", RoomType.THREEROOM, "제주도 제주시 제주동", 100000000L, 1000000L);
+        RoomDto roomDto = new RoomDto(1L, "M", RoomType.TWOROOM, "서울시 강서구 방화동", 200000000L, 1000000L,1L);
+        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000L, 0L,1L);
+        RoomDto roomDto3 = new RoomDto(3L, "M", RoomType.THREEROOM, "제주도 제주시 제주동", 100000000L, 1000000L,1L);
         //검색조건
         SearchDto searchDto = SearchDto.forJunitTest()
                 .roomType(RoomType.TWOROOM)
@@ -53,21 +53,21 @@ class RoomServiceTest {
                 .build();
 
         //when
-        roomService.insertMyRoom(roomDto, 1L);
-        roomService.insertMyRoom(roomDto2, 1L);
-        roomService.insertMyRoom(roomDto3, 1L);
+        roomService.insertMyRoom(roomDto);
+        roomService.insertMyRoom(roomDto2);
+        roomService.insertMyRoom(roomDto3);
         List<Room> rooms = roomService.selectRoomList(searchDto);
         //then
         assertThat(rooms.size()).isEqualTo(3);
         assertThat(rooms.get(0).getAddress()).isEqualTo("서울시 강서구 방화동");
-        assertThat(((MontlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(1000000L);
+        assertThat(((MonthlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(1000000L);
     }
 
     @Test
     void 거래유형_조회(){
         //given
-        RoomDto roomDto = new RoomDto(1L, "M", RoomType.TWOROOM, "서울시 강서구 방화동", 200000000L, 1000000L);
-        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000L, 0L);
+        RoomDto roomDto = new RoomDto(1L, "M", RoomType.TWOROOM, "서울시 강서구 방화동", 200000000L, 1000000L,1L);
+        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000L, 0L,1L);
         //검색조건
         SearchDto searchDto = SearchDto.forJunitTest()
                 .roomType(RoomType.ALL)
@@ -75,34 +75,37 @@ class RoomServiceTest {
                 .build();
 
         //when
-        roomService.insertMyRoom(roomDto, 1L);
-        roomService.insertMyRoom(roomDto2, 1L);
+        roomService.insertMyRoom(roomDto);
+        roomService.insertMyRoom(roomDto2);
         List<Room> rooms = roomService.selectRoomList(searchDto);
         //then
         assertThat(rooms.size()).isEqualTo(1);
         assertThat(rooms.get(0).getAddress()).isEqualTo("서울시 강서구 방화동");
-        assertThat(((MontlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(1000000L);
+        assertThat(((MonthlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(1000000L);
     }
 
     @Test
     void 가격범위_조회(){
         //given
-        RoomDto roomDto = new RoomDto(1L, "M", RoomType.TWOROOM, "서울시 강서구 방화동", 200000000, 1000000);
-        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000, 0);
+        RoomDto roomDto = new RoomDto(1L, "M", RoomType.TWOROOM, "서울시 강서구 방화동", 200000000L, 1000000L,1L);
+        RoomDto roomDto2 = new RoomDto(2L, "Y", RoomType.ONEROOM, "서울시 금천구 시흥동", 400000000L, 0L,1L);
+        RoomDto roomDto3 = new RoomDto(3L, "Y", RoomType.ONEROOM, "제주시 제주동", 700000000L, 0L,1L);
         //검색조건
         SearchDto searchDto = SearchDto.forJunitTest()
                 .roomType(RoomType.ALL)
-                .minPrice(300000000)
+                .minDeposit(300000000)
+                .maxDeposit(600000000)
                 .build();
 
         //when
-        roomService.insertMyRoom(roomDto, 1L);
-        roomService.insertMyRoom(roomDto2, 1L);
+        roomService.insertMyRoom(roomDto);
+        roomService.insertMyRoom(roomDto2);
+        roomService.insertMyRoom(roomDto3);
         List<Room> rooms = roomService.selectRoomList(searchDto);
         //then
         assertThat(rooms.size()).isEqualTo(1);
-        assertThat(rooms.get(0).getAddress()).isEqualTo("서울시 강서구 방화동");
-        assertThat(((MontlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(1000000L);
+        assertThat(rooms.get(0).getAddress()).isEqualTo("서울시 금천구 시흥동");
+        assertThat(rooms.get(0).getDeposit()).isEqualTo(400000000);
     }
 
     @Test
@@ -113,7 +116,7 @@ class RoomServiceTest {
                 .username("유상문")
                 .build();
         //when
-        roomService.insertMyRoom(roomDto, user.getUserId());
+        roomService.insertMyRoom(roomDto);
         List<Room> rooms = roomService.selectMyRoomList(user.getUserId());
 
         //then
@@ -129,7 +132,7 @@ class RoomServiceTest {
                 .build();
 
         //when
-        roomService.insertMyRoom(roomDto, user.getUserId());
+        roomService.insertMyRoom(roomDto);
         List<Room> rooms = roomService.selectMyRoomList(user.getUserId());
 
         //then
@@ -151,27 +154,27 @@ class RoomServiceTest {
                 .build();
 
         //when
-        roomService.insertMyRoom(roomDto, user.getUserId());
-        roomService.updateMyRoom(roomDto2, user.getUserId());
+        roomService.insertMyRoom(roomDto2);
+        roomService.updateMyRoom(roomDto2);
         List<Room> rooms = roomService.selectMyRoomList(user.getUserId());
 
         //then
-        assertThat(((MontlyPayRoom) rooms.get(0)).getDeposit()).isEqualTo(5000000L);
-        assertThat(((MontlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(200000L);
+        assertThat(((MonthlyPayRoom) rooms.get(0)).getDeposit()).isEqualTo(5000000L);
+        assertThat(((MonthlyPayRoom) rooms.get(0)).getRentPrice()).isEqualTo(200000L);
     }
 
     @Test
     void 내방_삭제() {
         //given
         RoomDto roomDto = RoomDto.builder()
-                .id(1L)
+                .roomId(1L)
                 .build();
         User user = User.builder()
                 .userId(1L)
                 .build();
         //when
-        roomService.insertMyRoom(roomDto, user.getUserId());
-        roomService.deleteMyRoomById(roomDto.getId());
+        roomService.insertMyRoom(roomDto);
+        roomService.deleteMyRoomById(roomDto.getRoomId());
         List<Room> rooms = roomService.selectMyRoomList(user.getUserId());
 
         //then

@@ -9,10 +9,12 @@ import me.sangmoon.RealEstateAgent.domain.room.RoomType;
 @Builder
 @AllArgsConstructor
 public class RoomDto {
-    private Long id;
+    private Long roomId;
     private String payType;
     private RoomType roomType;
     private String address;
-    private long deposit;
-    private long rentPrice;
+    private Long deposit;
+    private Long rentPrice;
+
+    private Long userId;
 }

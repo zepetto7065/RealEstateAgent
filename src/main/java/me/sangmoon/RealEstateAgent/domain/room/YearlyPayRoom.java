@@ -11,11 +11,9 @@ import javax.persistence.Entity;
 @DiscriminatorValue("Y")
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class YearlyPayRoom extends Room{
-    private long deposit;
 
     @Builder
-    public YearlyPayRoom(Long id, User user, String address, RoomType roomType, long deposit) {
-        super(id, user, address, roomType);
-        this.deposit = deposit;
+    public YearlyPayRoom(Long id, User user, String address, long deposit,RoomType roomType) {
+        super(id, user, address, roomType,deposit);
     }
 }
