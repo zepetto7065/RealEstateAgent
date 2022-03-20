@@ -49,4 +49,3 @@ pm.globals.set("jwt_token", jsonData.token);
 roomType (방 타입) : ONEROOM,TWOROOM,THREEROOM
 payType (지불 방식) : M-월세 , Y-전세
 minDeposit , maxDeposit : 가격단위는 보증금만 개발하였습니다.
-ㅇ
