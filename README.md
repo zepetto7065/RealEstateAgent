@@ -42,5 +42,11 @@ pm.globals.set("jwt_token", jsonData.token);
 #### 삭제
 <img width="685" alt="스크린샷 2022-03-20 오후 5 48 32" src="https://user-images.githubusercontent.com/44112221/159154946-913e1373-725a-4a81-8d47-a7ebac6d83f8.png">
 
+#### 조회
+<img width="546" alt="스크린샷 2022-03-20 오후 6 05 19" src="https://user-images.githubusercontent.com/44112221/159155483-8a83ad65-26ad-473d-a0be-edd55cd26fb8.png">
 
-
+#### 검색 조건
+roomType (방 타입) : ONEROOM,TWOROOM,THREEROOM
+payType (지불 방식) : M-월세 , Y-전세
+minDeposit , maxDeposit : 가격단위는 보증금만 개발하였습니다.
+ㅇ
