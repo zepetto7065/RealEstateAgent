@@ -1,5 +1,5 @@
 # RealEstateAgent
-부동산 중개 플랫폼
+부동산 중개 플랫폼 API
 
 ## 실행 방법
 - 실행 Test는 postman 기준으로 작성하였습니다.
